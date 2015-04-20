@@ -1,22 +1,28 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.text.html.ImageView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class ProgramHub extends JFrame implements ActionListener
 {
+    //Panels to be used.
     JPanel linkPanel;
     JPanel header;
+    //Buttons for days!
     JButton calcButton, salesforceButton, etimeButton, wikiCentralButton, opsmartButton, jiraButton, btbbButton, bbhelpButton, testLabButton, bandwidthButton, headerButton;
-    JButton windowsCalcButton, puttyButton, winscpButton,remoteDesktopButton, outlookButton,notepadButton;
-    GridLayout standard = new GridLayout(0,3,10,10);
+    JButton windowsCalcButton, puttyButton, winscpButton, remoteDesktopButton, outlookButton, notepadButton;
+    //Layouts
+    GridLayout standard = new GridLayout(0, 3, 10, 10);
     BorderLayout pageLayout = new BorderLayout();
-    GridLayout headerLayout = new GridLayout(0,1);
-    String headerPath = "https://github.com/CryoByte33/WorkSmarter";
+    GridLayout headerLayout = new GridLayout(0, 1);
+    //Links for buttons.
+    String headerPath = "http://github.com/CryoByte33/WorkSmarter";
     String salesforcePath = "https://blackboard.my.salesforce.com/console";
     String etimePath = "http://rocjfsweb06/eet/applications/wtk/html/ess/logon.jsp";
     String wikiCentralPath = "http://wikicentral.bbbb.net/login.action?logout=true";
@@ -27,6 +33,7 @@ public class ProgramHub extends JFrame implements ActionListener
     String testLabPath = "https://silicon.pd.local:8443/display/CSI/Test+Lab";
     String bandwidthPath = "http://10.8.224.35/";
 
+    //Threads for each program that's bootable.
     Thread calcThread = new Thread()
     {
         public void run()
@@ -75,11 +82,14 @@ public class ProgramHub extends JFrame implements ActionListener
         }
     };
 
+    //Main constructor
     public ProgramHub()
     {
+        //Give panels layouts
         linkPanel = new JPanel(standard);
         header = new JPanel(headerLayout);
 
+        //Fancy banner with error checking
         BufferedImage buttonIcon = null;
         try
         {
@@ -93,6 +103,7 @@ public class ProgramHub extends JFrame implements ActionListener
         headerButton.addActionListener(this);
         header.add(headerButton);
 
+        //Various buttons being implemented
         calcButton = new JButton("Work Calculator");
         calcButton.addActionListener(this);
 
@@ -141,6 +152,7 @@ public class ProgramHub extends JFrame implements ActionListener
         notepadButton = new JButton("Notepad++");
         notepadButton.addActionListener(this);
 
+        //Add all the things to the panel
         linkPanel.add(salesforceButton);
         linkPanel.add(etimeButton);
         linkPanel.add(wikiCentralButton);
@@ -157,13 +169,15 @@ public class ProgramHub extends JFrame implements ActionListener
         linkPanel.add(outlookButton);
         linkPanel.add(notepadButton);
 
+        //Formatting
         this.setLayout(pageLayout);
         this.add(header, BorderLayout.PAGE_START);
-        this.add(linkPanel,BorderLayout.CENTER);
+        this.add(linkPanel, BorderLayout.CENTER);
         this.add(calcButton, BorderLayout.PAGE_END);
     }
 
-    public static void main (String[] args)
+    //Initialize the program
+    public static void main(String[] args)
     {
         ProgramHub box = new ProgramHub();
         box.setTitle("WorkSmarter");
@@ -172,9 +186,11 @@ public class ProgramHub extends JFrame implements ActionListener
         box.setVisible(true);
     }
 
+    //Implementation of abscract methods/
     @Override
     public void actionPerformed(ActionEvent event)
     {
+        //Make link buttons do things
         if (event.getSource() == headerButton)
         {
             try
@@ -303,6 +319,7 @@ public class ProgramHub extends JFrame implements ActionListener
             }
         }
 
+        //Start threads if not active.
         if (event.getSource() == windowsCalcButton)
         {
             if (calcThread.isAlive() == false)
@@ -352,6 +369,7 @@ public class ProgramHub extends JFrame implements ActionListener
         }
     }
 
+    //Everything following is launch and thread logic. To be improved.
     public void launchWinCalc()
     {
         Process process = null;
