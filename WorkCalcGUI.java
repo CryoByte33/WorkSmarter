@@ -187,7 +187,7 @@ public class WorkCalcGUI extends JFrame implements ActionListener
             hourly.setSelected(false);
         }
 
-        if (event.getSource() == go) //Start button. Simple 
+        if (event.getSource() == go) //Start button. Simple
         {
             if (thread.isAlive() == false)
             {
