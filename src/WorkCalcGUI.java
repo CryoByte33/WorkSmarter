@@ -7,7 +7,7 @@ public class WorkCalcGUI extends JFrame implements ActionListener
 {
     //Standard declarations.
     JPanel mainPanel;
-    JLabel wageLabel, incrementLabel, totalMadeLabel, totalMade, hoursPassed, minutesPassed, secondsPassed;
+    JLabel wageLabel, incrementLabel, totalMadeLabel, totalMade, hoursPassed, minutesPassed, secondsPassed, afterTaxLabel, afterTax;
     JTextField wageBox,incrementField;
     JRadioButton hourly, salaried;
     JButton go, stop, pause;
@@ -49,6 +49,8 @@ public class WorkCalcGUI extends JFrame implements ActionListener
         hoursPassed = new JLabel("Hours: 00");
         minutesPassed = new JLabel("Minutes: 00");
         secondsPassed = new JLabel("Seconds: 00");
+        afterTaxLabel = new JLabel("After Tax: ");
+        afterTax = new JLabel("$0.00");
 
         hourly = new JRadioButton("Hourly", true);
         hourly.addActionListener(this);
@@ -81,8 +83,11 @@ public class WorkCalcGUI extends JFrame implements ActionListener
         mainPanel.add(totalMadeLabel);
         mainPanel.add(totalMade);
         mainPanel.add(stop);
+        mainPanel.add(new JLabel("                      ")); //Forced separator.
+        mainPanel.add(afterTaxLabel);
+        mainPanel.add(afterTax);
+        mainPanel.add(new JLabel("                      ")); //Forced separator.
         mainPanel.add(pause);
-        mainPanel.add(new JLabel("Work Calculator v0.25 - By: Kyle Mace"));
         this.add(mainPanel);
     }
 
@@ -149,6 +154,7 @@ public class WorkCalcGUI extends JFrame implements ActionListener
             minutesPassed.setText("Minutes: " + time.format(minutes));
             secondsPassed.setText("Seconds: " + time.format(runningTotal));
             totalMade.setText(df.format(total));
+            afterTax.setText(df.format(total * .8));
 
             secondsElapsed = secondsElapsed + increment;
 
