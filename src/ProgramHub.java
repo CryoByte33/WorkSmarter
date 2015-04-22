@@ -15,8 +15,8 @@ public class ProgramHub extends JFrame implements ActionListener
     JPanel linkPanel;
     JPanel header;
     //Buttons for days!
-    JButton calcButton, salesforceButton, etimeButton, wikiCentralButton, opsmartButton, jiraButton, btbbButton, bbhelpButton, testLabButton, bandwidthButton, headerButton;
-    JButton windowsCalcButton, puttyButton, winscpButton, remoteDesktopButton, outlookButton, notepadButton;
+    GradientButton calcButton, salesforceButton, etimeButton, wikiCentralButton, opsmartButton, jiraButton, btbbButton, bbhelpButton, testLabButton, bandwidthButton, headerButton;
+    GradientButton windowsCalcButton, puttyButton, winscpButton, remoteDesktopButton, outlookButton, notepadButton;
     //Layouts
     GridLayout standard = new GridLayout(0, 3, 10, 10);
     BorderLayout pageLayout = new BorderLayout();
@@ -32,6 +32,9 @@ public class ProgramHub extends JFrame implements ActionListener
     String bbhelpPath = "http://help.blackboard.com/";
     String testLabPath = "https://silicon.pd.local:8443/display/CSI/Test+Lab";
     String bandwidthPath = "http://10.8.224.35/";
+
+    Color color1 = new Color(255, 255, 255);
+    Color color2 = new Color(117, 243, 250);
 
     //Threads for each program that's bootable.
     Thread calcThread = new Thread()
@@ -99,57 +102,58 @@ public class ProgramHub extends JFrame implements ActionListener
         {
             e.printStackTrace();
         }
-        headerButton = new JButton(new ImageIcon(buttonIcon));
+
+        headerButton = new GradientButton(color1, color2, 2, new ImageIcon(buttonIcon));
         headerButton.addActionListener(this);
         header.add(headerButton);
 
         //Various buttons being implemented
-        calcButton = new JButton("Work Calculator");
+        calcButton = new GradientButton(color1, color2, 2, "Work Calculator");
         calcButton.addActionListener(this);
 
-        salesforceButton = new JButton("SalesForce");
+        salesforceButton = new GradientButton(color1, color2, 2, "SalesForce");
         salesforceButton.addActionListener(this);
 
-        etimeButton = new JButton("eTime");
+        etimeButton = new GradientButton(color1, color2, 2, "eTime");
         etimeButton.addActionListener(this);
 
-        wikiCentralButton = new JButton("WikiCentral");
+        wikiCentralButton = new GradientButton(color1, color2, 2, "WikiCentral");
         wikiCentralButton.addActionListener(this);
 
-        opsmartButton = new JButton("OpSmart");
+        opsmartButton = new GradientButton(color1, color2, 2, "OpSmart");
         opsmartButton.addActionListener(this);
 
-        jiraButton = new JButton("JIRA");
+        jiraButton = new GradientButton(color1, color2, 2, "JIRA");
         jiraButton.addActionListener(this);
 
-        btbbButton = new JButton("BTBB");
+        btbbButton = new GradientButton(color1, color2, 2, "BTBB");
         btbbButton.addActionListener(this);
 
-        bbhelpButton = new JButton("Bb Help");
+        bbhelpButton = new GradientButton(color1, color2, 2, "Bb Help");
         bbhelpButton.addActionListener(this);
 
-        testLabButton = new JButton("Test Lab");
+        testLabButton = new GradientButton(color1, color2, 2, "Test Lab");
         testLabButton.addActionListener(this);
 
-        bandwidthButton = new JButton("Bandwidth");
+        bandwidthButton = new GradientButton(color1, color2, 2, "Bandwidth");
         bandwidthButton.addActionListener(this);
 
-        windowsCalcButton = new JButton("Windows Calculator");
+        windowsCalcButton = new GradientButton(color1, color2, 2, "Windows Calculator");
         windowsCalcButton.addActionListener(this);
 
-        puttyButton = new JButton("PuTTY");
+        puttyButton = new GradientButton(color1, color2, 2, "PuTTY");
         puttyButton.addActionListener(this);
 
-        winscpButton = new JButton("WinSCP");
+        winscpButton = new GradientButton(color1, color2, 2, "WinSCP");
         winscpButton.addActionListener(this);
 
-        remoteDesktopButton = new JButton("Remote Desktop");
+        remoteDesktopButton = new GradientButton(color1, color2, 2, "Remote Desktop");
         remoteDesktopButton.addActionListener(this);
 
-        outlookButton = new JButton("Outlook");
+        outlookButton = new GradientButton(color1, color2, 2, "Outlook");
         outlookButton.addActionListener(this);
 
-        notepadButton = new JButton("Notepad++");
+        notepadButton = new GradientButton(color1, color2, 2, "Notepad++");
         notepadButton.addActionListener(this);
 
         //Add all the things to the panel
