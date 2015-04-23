@@ -16,7 +16,7 @@ public class ProgramHub extends JFrame implements ActionListener
     JPanel header;
     //Buttons for days!
     GradientButton calcButton, salesforceButton, etimeButton, wikiCentralButton, opsmartButton, jiraButton, btbbButton, bbhelpButton, testLabButton, bandwidthButton, headerButton;
-    GradientButton windowsCalcButton, puttyButton, winscpButton, remoteDesktopButton, outlookButton, notepadButton;
+    GradientButton windowsCalcButton, puttyButton, winscpButton, remoteDesktopButton, outlookButton, notepadButton, optionsButton;
     //Links for buttons.
     String headerPath = "http://github.com/CryoByte33/WorkSmarter";
     String salesforcePath = "https://blackboard.my.salesforce.com/console";
@@ -86,8 +86,34 @@ public class ProgramHub extends JFrame implements ActionListener
         }
     };
 
+    Thread optionsThread = new Thread()
+    {
+        public void run()
+        {
+            launchOptions();
+            color1 = options.getColor();
+            color2 = options.getColor2();
+            initializeGUI();
+        }
+    };
+
     //Main constructor
     public ProgramHub()
+    {
+        initializeGUI();
+    }
+
+    //Initialize the program
+    public static void main(String[] args)
+    {
+        ProgramHub box = new ProgramHub();
+        box.setTitle("WorkSmarter");
+        box.setSize(500, 400);
+        box.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        box.setVisible(true);
+    }
+
+    public void initializeGUI()
     {
         //Give panels layouts
         linkPanel = new JPanel(standard);
@@ -157,6 +183,9 @@ public class ProgramHub extends JFrame implements ActionListener
         notepadButton = new GradientButton(color1, color2, direction, "Notepad++");
         notepadButton.addActionListener(this);
 
+        optionsButton = new GradientButton(color1, color2, direction, "Options");
+        optionsButton.addActionListener(this);
+
         //Add all the things to the panel
         linkPanel.add(salesforceButton);
         linkPanel.add(etimeButton);
@@ -173,22 +202,13 @@ public class ProgramHub extends JFrame implements ActionListener
         linkPanel.add(remoteDesktopButton);
         linkPanel.add(outlookButton);
         linkPanel.add(notepadButton);
+        linkPanel.add(optionsButton);
 
         //Formatting
         this.setLayout(pageLayout);
         this.add(header, BorderLayout.PAGE_START);
         this.add(linkPanel, BorderLayout.CENTER);
         this.add(calcButton, BorderLayout.PAGE_END);
-    }
-
-    //Initialize the program
-    public static void main(String[] args)
-    {
-        ProgramHub box = new ProgramHub();
-        box.setTitle("WorkSmarter");
-        box.setSize(500, 400);
-        box.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        box.setVisible(true);
     }
 
     //Implementation of abscract methods/
@@ -370,6 +390,14 @@ public class ProgramHub extends JFrame implements ActionListener
             if (notepadThread.isAlive() == false)
             {
                 notepadThread.start();
+            }
+        }
+
+        if (event.getSource() == optionsButton)
+        {
+            if (optionsThread.isAlive() == false)
+            {
+                optionsThread.start();
             }
         }
     }
@@ -665,6 +693,34 @@ public class ProgramHub extends JFrame implements ActionListener
             public void run()
             {
                 launchNotepad();
+            }
+        };
+    }
+
+    public void launchOptions()
+    {
+        OptionsButton options = new OptionsButton();
+        options.setTitle("Options");
+        options.setSize(650, 700);
+        options.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        options.setVisible(true);
+
+        optionsThread.interrupt();
+
+        try
+        {
+            optionsThread.join();
+        }
+        catch (InterruptedException e)
+        {
+            e.printStackTrace();
+        }
+
+        optionsThread = new Thread()
+        {
+            public void run()
+            {
+                launchOptions();
             }
         };
     }
