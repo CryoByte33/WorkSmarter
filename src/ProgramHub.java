@@ -36,7 +36,8 @@ public class ProgramHub extends JFrame implements ActionListener
     GridLayout standard = new GridLayout(0, 3, 10, 10);
     BorderLayout pageLayout = new BorderLayout();
     GridLayout headerLayout = new GridLayout(0, 1);
-    String pathToFile = "/WorkSmarter.txt";
+    String directory = System.getProperty("user.home") + "/AppData/Roaming/WorkSmarter/";
+    String pathToFile = "WorkSmarter.txt";
     public Thread optionsThread = new Thread()
     {
         public void run()
@@ -833,15 +834,22 @@ public class ProgramHub extends JFrame implements ActionListener
 
     public void saveOptions() throws FileNotFoundException
     {
+        File fileDirectory = new File(directory);
+
+        if (fileDirectory.exists() == false)
+        {
+            fileDirectory.mkdir();
+        }
+
         String content = color1.getRed() + " " + color1.getGreen() + " " + color1.getBlue() + " " + color2.getRed() + " " + color2.getGreen() + " " + color2.getBlue() + " " + windowSize;
-        PrintWriter out = new PrintWriter(pathToFile);
+        PrintWriter out = new PrintWriter(directory + pathToFile);
         out.println(content);
         out.close();
     }
 
     public void loadOptions() throws IOException
     {
-        Scanner scanner = new Scanner(new File(pathToFile));
+        Scanner scanner = new Scanner(new File(directory + pathToFile));
         int[] values = new int[7];
         int i = 0;
 
