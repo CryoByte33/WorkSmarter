@@ -125,7 +125,7 @@ public class ProgramHub extends JFrame implements ActionListener
 
         if (windowSize == 0)
         {
-            box.setSize(500, 400);
+            box.setSize(450, 400);
         }
         else if (windowSize == 1)
         {
@@ -264,7 +264,7 @@ public class ProgramHub extends JFrame implements ActionListener
 
         if (windowSize == 0)
         {
-            this.setSize(500, 400);
+            this.setSize(450, 400);
             standard = new GridLayout(0, 3, 10, 10);
         }
         else if (windowSize == 1)
@@ -320,7 +320,7 @@ public class ProgramHub extends JFrame implements ActionListener
         {
             WorkCalcGUI workCalc = new WorkCalcGUI(color1, color2, direction);
             workCalc.setTitle("Work Calculator");
-            workCalc.setSize(280, 250);
+            workCalc.setSize(260, 250);
             workCalc.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             workCalc.setVisible(true);
         }
