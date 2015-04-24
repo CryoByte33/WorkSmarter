@@ -6,10 +6,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.util.Scanner;
 
 public class ProgramHub extends JFrame implements ActionListener
 {
@@ -17,17 +15,13 @@ public class ProgramHub extends JFrame implements ActionListener
     static Color color1 = new Color(255, 255, 255);
     static Color color2 = new Color(117, 243, 250);
     static int direction = GradientButton.TOP_TO_BOTTOM;
+    static int windowSize = 0;
     //Panels to be used.
     JPanel linkPanel;
     JPanel header;
     //Buttons for days!
     GradientButton calcButton, salesforceButton, etimeButton, wikiCentralButton, opsmartButton, jiraButton, btbbButton, bbhelpButton, testLabButton, bandwidthButton, headerButton;
     GradientButton windowsCalcButton, puttyButton, winscpButton, remoteDesktopButton, outlookButton, notepadButton, optionsButton;
-    public Thread optionsThread = new Thread() {
-        public void run() {
-            launchOptions();
-        }
-    };
     //Links for buttons.
     String headerPath = "http://github.com/CryoByte33/WorkSmarter";
     String salesforcePath = "https://blackboard.my.salesforce.com/console";
@@ -42,6 +36,14 @@ public class ProgramHub extends JFrame implements ActionListener
     GridLayout standard = new GridLayout(0, 3, 10, 10);
     BorderLayout pageLayout = new BorderLayout();
     GridLayout headerLayout = new GridLayout(0, 1);
+    String pathToFile = "/WorkSmarter.txt";
+    public Thread optionsThread = new Thread()
+    {
+        public void run()
+        {
+            launchOptions();
+        }
+    };
     //Threads for each program that's bootable.
     Thread calcThread = new Thread()
     {
@@ -89,6 +91,28 @@ public class ProgramHub extends JFrame implements ActionListener
     //Main constructor
     public ProgramHub()
     {
+        try
+        {
+            loadOptions();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        if (windowSize == 0)
+        {
+            standard = new GridLayout(0, 3, 10, 10);
+        }
+        else if (windowSize == 1)
+        {
+            standard = new GridLayout(0, 2, 0, 5);
+        }
+        else if (windowSize == 2)
+        {
+            standard = new GridLayout(0, 8, 10, 10);
+        }
+
         initializeGUI();
     }
 
@@ -97,7 +121,20 @@ public class ProgramHub extends JFrame implements ActionListener
     {
         ProgramHub box = new ProgramHub();
         box.setTitle("WorkSmarter");
-        box.setSize(500, 400);
+
+        if (windowSize == 0)
+        {
+            box.setSize(500, 400);
+        }
+        else if (windowSize == 1)
+        {
+            box.setSize(325, 800);
+        }
+        else if (windowSize == 2)
+        {
+            box.setSize(1400, 250);
+        }
+
         box.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         box.setVisible(true);
     }
@@ -200,7 +237,11 @@ public class ProgramHub extends JFrame implements ActionListener
         this.add(calcButton, BorderLayout.PAGE_END);
     }
 
-    public void updateGUI() {
+    public void updateGUI()
+    {
+        linkPanel.removeAll();
+        this.remove(linkPanel);
+
         headerButton.setGradient(color1, color2, direction);
         calcButton.setGradient(color1, color2, direction);
         salesforceButton.setGradient(color1, color2, direction);
@@ -220,7 +261,42 @@ public class ProgramHub extends JFrame implements ActionListener
         notepadButton.setGradient(color1, color2, direction);
         optionsButton.setGradient(color1, color2, direction);
 
-        this.repaint();
+        if (windowSize == 0)
+        {
+            this.setSize(500, 400);
+            standard = new GridLayout(0, 3, 10, 10);
+        }
+        else if (windowSize == 1)
+        {
+            this.setSize(325, 800);
+            standard = new GridLayout(0, 2, 0, 5);
+        }
+        else if (windowSize == 2)
+        {
+            this.setSize(1400, 250);
+            standard = new GridLayout(0, 8, 10, 10);
+        }
+
+        linkPanel = new JPanel(standard);
+
+        linkPanel.add(salesforceButton);
+        linkPanel.add(etimeButton);
+        linkPanel.add(wikiCentralButton);
+        linkPanel.add(opsmartButton);
+        linkPanel.add(jiraButton);
+        linkPanel.add(btbbButton);
+        linkPanel.add(bbhelpButton);
+        linkPanel.add(testLabButton);
+        linkPanel.add(bandwidthButton);
+        linkPanel.add(windowsCalcButton);
+        linkPanel.add(puttyButton);
+        linkPanel.add(winscpButton);
+        linkPanel.add(remoteDesktopButton);
+        linkPanel.add(outlookButton);
+        linkPanel.add(notepadButton);
+        linkPanel.add(optionsButton);
+
+        this.add(linkPanel, BorderLayout.CENTER);
     }
 
     //Implementation of abstract methods/
@@ -243,7 +319,7 @@ public class ProgramHub extends JFrame implements ActionListener
         {
             WorkCalcGUI workCalc = new WorkCalcGUI(color1, color2, direction);
             workCalc.setTitle("Work Calculator");
-            workCalc.setSize(260, 250);
+            workCalc.setSize(280, 250);
             workCalc.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
             workCalc.setVisible(true);
         }
@@ -713,21 +789,32 @@ public class ProgramHub extends JFrame implements ActionListener
     {
         OptionsButton options = new OptionsButton();
         options.setTitle("Options");
-        options.setSize(650, 700);
+        options.setSize(700, 700);
         options.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         options.setVisible(true);
 
         options.addWindowListener(new WindowAdapter()
         {
             @Override
-            public void windowClosed(WindowEvent e) {
+            public void windowClosed(WindowEvent e)
+            {
                 updateGUI();
+
+                try
+                {
+                    saveOptions();
+                }
+                catch (IOException e1)
+                {
+                    e1.printStackTrace();
+                }
             }
         });
 
         optionsThread.interrupt();
 
-        try {
+        try
+        {
             optionsThread.join();
         }
         catch (InterruptedException e)
@@ -742,5 +829,29 @@ public class ProgramHub extends JFrame implements ActionListener
                 launchOptions();
             }
         };
+    }
+
+    public void saveOptions() throws FileNotFoundException
+    {
+        String content = color1.getRed() + " " + color1.getGreen() + " " + color1.getBlue() + " " + color2.getRed() + " " + color2.getGreen() + " " + color2.getBlue() + " " + windowSize;
+        PrintWriter out = new PrintWriter(pathToFile);
+        out.println(content);
+        out.close();
+    }
+
+    public void loadOptions() throws IOException
+    {
+        Scanner scanner = new Scanner(new File(pathToFile));
+        int[] values = new int[7];
+        int i = 0;
+
+        while (scanner.hasNextInt())
+        {
+            values[i++] = scanner.nextInt();
+        }
+
+        color1 = new Color(values[0], values[1], values[2]);
+        color2 = new Color(values[3], values[4], values[5]);
+        windowSize = values[6];
     }
 }

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="WorkSmarter">
+    <output-path>$PROJECT_DIR$/out/artifacts/WorkSmarter</output-path>
+    <root id="archive" name="WorkSmarter.jar">
+      <element id="module-output" name="WorkSmarter" />
+    </root>
+  </artifact>
+</component>

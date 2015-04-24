@@ -84,10 +84,10 @@ public class WorkCalcGUI extends JFrame implements ActionListener
         mainPanel.add(totalMadeLabel);
         mainPanel.add(totalMade);
         mainPanel.add(stop);
-        mainPanel.add(new JLabel("                      ")); //Forced separator.
+        mainPanel.add(new JLabel("                 ")); //Forced separator.
         mainPanel.add(afterTaxLabel);
         mainPanel.add(afterTax);
-        mainPanel.add(new JLabel("                      ")); //Forced separator.
+        mainPanel.add(new JLabel("                 ")); //Forced separator.
         mainPanel.add(pause);
         this.add(mainPanel);
     }

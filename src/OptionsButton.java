@@ -9,26 +9,47 @@ public class OptionsButton extends JDialog implements ActionListener, ChangeList
 {
     static Color chosenColor1;
     static Color chosenColor2;
-    JPanel optionsPane;
+    JPanel optionsPane = new JPanel(new BorderLayout());
+    ;
+    JPanel colorPane = new JPanel(new GridLayout(0, 1));
+    JPanel layoutPane = new JPanel(new GridLayout(0, 3));
     JColorChooser colorChooser, colorChooser2;
-    JButton confirm;
+    JRadioButton standardLayout, tallLayout, wideLayout;
+    GradientButton confirm;
 
     public OptionsButton()
     {
-        optionsPane = new JPanel();
-
         colorChooser = new JColorChooser();
         colorChooser.getSelectionModel().addChangeListener(this);
 
         colorChooser2 = new JColorChooser();
         colorChooser2.getSelectionModel().addChangeListener(this);
 
-        confirm = new JButton("Confirm");
+        standardLayout = new JRadioButton("Standard", true);
+        ProgramHub.windowSize = 0;
+        standardLayout.addActionListener(this);
+
+        tallLayout = new JRadioButton("Tall", false);
+        tallLayout.addActionListener(this);
+
+        wideLayout = new JRadioButton("Wide", false);
+        wideLayout.addActionListener(this);
+
+        confirm = new GradientButton("Confirm");
         confirm.addActionListener(this);
 
-        optionsPane.add(colorChooser);
-        optionsPane.add(colorChooser2);
-        optionsPane.add(confirm);
+        colorPane.add(new JLabel("Color 1:"));
+        colorPane.add(colorChooser);
+        colorPane.add(new JLabel("Color 2:"));
+        colorPane.add(colorChooser2);
+        layoutPane.add(new JLabel("Layouts:"));
+        layoutPane.add(standardLayout);
+        layoutPane.add(tallLayout);
+        layoutPane.add(wideLayout);
+        optionsPane.add(layoutPane, BorderLayout.EAST);
+        optionsPane.add(colorPane, BorderLayout.CENTER);
+        optionsPane.add(confirm, BorderLayout.SOUTH);
+
         this.add(optionsPane);
     }
 
@@ -45,6 +66,30 @@ public class OptionsButton extends JDialog implements ActionListener, ChangeList
             ProgramHub.color1 = chosenColor1;
             ProgramHub.color2 = chosenColor2;
             this.dispose();
+        }
+
+        if (e.getSource() == standardLayout)
+        {
+            ProgramHub.windowSize = 0;
+            standardLayout.setSelected(true);
+            tallLayout.setSelected(false);
+            wideLayout.setSelected(false);
+        }
+
+        if (e.getSource() == tallLayout)
+        {
+            ProgramHub.windowSize = 1;
+            standardLayout.setSelected(false);
+            tallLayout.setSelected(true);
+            wideLayout.setSelected(false);
+        }
+
+        if (e.getSource() == wideLayout)
+        {
+            ProgramHub.windowSize = 2;
+            standardLayout.setSelected(false);
+            tallLayout.setSelected(false);
+            wideLayout.setSelected(true);
         }
     }
 }
