@@ -3,6 +3,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -11,12 +13,21 @@ import java.io.InputStreamReader;
 
 public class ProgramHub extends JFrame implements ActionListener
 {
+    //Formatting variables
+    static Color color1 = new Color(255, 255, 255);
+    static Color color2 = new Color(117, 243, 250);
+    static int direction = GradientButton.TOP_TO_BOTTOM;
     //Panels to be used.
     JPanel linkPanel;
     JPanel header;
     //Buttons for days!
     GradientButton calcButton, salesforceButton, etimeButton, wikiCentralButton, opsmartButton, jiraButton, btbbButton, bbhelpButton, testLabButton, bandwidthButton, headerButton;
     GradientButton windowsCalcButton, puttyButton, winscpButton, remoteDesktopButton, outlookButton, notepadButton, optionsButton;
+    public Thread optionsThread = new Thread() {
+        public void run() {
+            launchOptions();
+        }
+    };
     //Links for buttons.
     String headerPath = "http://github.com/CryoByte33/WorkSmarter";
     String salesforcePath = "https://blackboard.my.salesforce.com/console";
@@ -28,15 +39,9 @@ public class ProgramHub extends JFrame implements ActionListener
     String bbhelpPath = "http://help.blackboard.com/";
     String testLabPath = "https://silicon.pd.local:8443/display/CSI/Test+Lab";
     String bandwidthPath = "http://10.8.224.35/";
-
-    //Formatting variables
-    Color color1 = new Color(255, 255, 255);
-    Color color2 = new Color(117, 243, 250);
-    int direction = GradientButton.TOP_TO_BOTTOM;
     GridLayout standard = new GridLayout(0, 3, 10, 10);
     BorderLayout pageLayout = new BorderLayout();
     GridLayout headerLayout = new GridLayout(0, 1);
-
     //Threads for each program that's bootable.
     Thread calcThread = new Thread()
     {
@@ -45,7 +50,6 @@ public class ProgramHub extends JFrame implements ActionListener
             launchWinCalc();
         }
     };
-
     Thread puttyThread = new Thread()
     {
         public void run()
@@ -53,7 +57,6 @@ public class ProgramHub extends JFrame implements ActionListener
             launchPutty();
         }
     };
-
     Thread winscpThread = new Thread()
     {
         public void run()
@@ -61,7 +64,6 @@ public class ProgramHub extends JFrame implements ActionListener
             launchWinscp();
         }
     };
-
     Thread remoteThread = new Thread()
     {
         public void run()
@@ -69,7 +71,6 @@ public class ProgramHub extends JFrame implements ActionListener
             launchRemoteDesktop();
         }
     };
-
     Thread outlookThread = new Thread()
     {
         public void run()
@@ -77,23 +78,11 @@ public class ProgramHub extends JFrame implements ActionListener
             launchOutlook();
         }
     };
-
     Thread notepadThread = new Thread()
     {
         public void run()
         {
             launchNotepad();
-        }
-    };
-
-    Thread optionsThread = new Thread()
-    {
-        public void run()
-        {
-            launchOptions();
-            color1 = options.getColor();
-            color2 = options.getColor2();
-            initializeGUI();
         }
     };
 
@@ -211,7 +200,30 @@ public class ProgramHub extends JFrame implements ActionListener
         this.add(calcButton, BorderLayout.PAGE_END);
     }
 
-    //Implementation of abscract methods/
+    public void updateGUI() {
+        headerButton.setGradient(color1, color2, direction);
+        calcButton.setGradient(color1, color2, direction);
+        salesforceButton.setGradient(color1, color2, direction);
+        etimeButton.setGradient(color1, color2, direction);
+        wikiCentralButton.setGradient(color1, color2, direction);
+        opsmartButton.setGradient(color1, color2, direction);
+        jiraButton.setGradient(color1, color2, direction);
+        btbbButton.setGradient(color1, color2, direction);
+        bbhelpButton.setGradient(color1, color2, direction);
+        testLabButton.setGradient(color1, color2, direction);
+        bandwidthButton.setGradient(color1, color2, direction);
+        windowsCalcButton.setGradient(color1, color2, direction);
+        puttyButton.setGradient(color1, color2, direction);
+        winscpButton.setGradient(color1, color2, direction);
+        remoteDesktopButton.setGradient(color1, color2, direction);
+        outlookButton.setGradient(color1, color2, direction);
+        notepadButton.setGradient(color1, color2, direction);
+        optionsButton.setGradient(color1, color2, direction);
+
+        this.repaint();
+    }
+
+    //Implementation of abstract methods/
     @Override
     public void actionPerformed(ActionEvent event)
     {
@@ -229,7 +241,7 @@ public class ProgramHub extends JFrame implements ActionListener
         }
         if (event.getSource() == calcButton)
         {
-            WorkCalcGUI workCalc = new WorkCalcGUI();
+            WorkCalcGUI workCalc = new WorkCalcGUI(color1, color2, direction);
             workCalc.setTitle("Work Calculator");
             workCalc.setSize(260, 250);
             workCalc.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -705,10 +717,17 @@ public class ProgramHub extends JFrame implements ActionListener
         options.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         options.setVisible(true);
 
+        options.addWindowListener(new WindowAdapter()
+        {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                updateGUI();
+            }
+        });
+
         optionsThread.interrupt();
 
-        try
-        {
+        try {
             optionsThread.join();
         }
         catch (InterruptedException e)

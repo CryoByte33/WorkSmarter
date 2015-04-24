@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
@@ -10,7 +11,7 @@ public class WorkCalcGUI extends JFrame implements ActionListener
     JLabel wageLabel, incrementLabel, totalMadeLabel, totalMade, hoursPassed, minutesPassed, secondsPassed, afterTaxLabel, afterTax;
     JTextField wageBox,incrementField;
     JRadioButton hourly, salaried;
-    JButton go, stop, pause;
+    GradientButton go, stop, pause;
 
     boolean isHourly = true;
     float payGrade;
@@ -36,7 +37,7 @@ public class WorkCalcGUI extends JFrame implements ActionListener
     };
 
     //Main constructor.
-    public WorkCalcGUI()
+    public WorkCalcGUI(Color colorOne, Color colorTwo, int direction)
     {
         //Implement fields and listeners.
         mainPanel = new JPanel();
@@ -58,13 +59,13 @@ public class WorkCalcGUI extends JFrame implements ActionListener
         salaried = new JRadioButton("Salaried", false);
         salaried.addActionListener(this);
 
-        go = new JButton("Start");
+        go = new GradientButton(colorOne, colorTwo, direction, "Start");
         go.addActionListener(this);
 
-        stop = new JButton("Stop");
+        stop = new GradientButton(colorOne, colorTwo, direction, "Stop");
         stop.addActionListener(this);
 
-        pause = new JButton("Pause/Resume");
+        pause = new GradientButton(colorOne, colorTwo, direction, "Pause/Resume");
         pause.addActionListener(this);
 
         //Formatting and whatnot.
@@ -89,16 +90,6 @@ public class WorkCalcGUI extends JFrame implements ActionListener
         mainPanel.add(new JLabel("                      ")); //Forced separator.
         mainPanel.add(pause);
         this.add(mainPanel);
-    }
-
-    //Creates window.
-    public static void main(String[] args)
-    {
-        WorkCalcGUI box = new WorkCalcGUI();
-        box.setTitle("Work Calculator");
-        box.setSize(260, 250);
-        box.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        box.setVisible(true);
     }
 
     //Main action class. Performs all calculations.

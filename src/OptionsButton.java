@@ -2,12 +2,16 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class OptionsButton extends JFrame implements ChangeListener
+public class OptionsButton extends JDialog implements ActionListener, ChangeListener
 {
+    static Color chosenColor1;
+    static Color chosenColor2;
     JPanel optionsPane;
     JColorChooser colorChooser, colorChooser2;
-    Color chosenColor, chosenColor2;
+    JButton confirm;
 
     public OptionsButton()
     {
@@ -19,34 +23,28 @@ public class OptionsButton extends JFrame implements ChangeListener
         colorChooser2 = new JColorChooser();
         colorChooser2.getSelectionModel().addChangeListener(this);
 
+        confirm = new JButton("Confirm");
+        confirm.addActionListener(this);
+
         optionsPane.add(colorChooser);
         optionsPane.add(colorChooser2);
+        optionsPane.add(confirm);
         this.add(optionsPane);
-    }
-
-    public static void main(String[] args)
-    {
-        OptionsButton box = new OptionsButton();
-        box.setTitle("Options");
-        box.setSize(800, 400);
-        box.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        box.setVisible(true);
-    }
-
-    public Color getColor()
-    {
-        return (chosenColor);
-    }
-
-    public Color getColor2()
-    {
-        return (chosenColor2);
     }
 
     @Override
     public void stateChanged(ChangeEvent e)
     {
-        chosenColor = colorChooser.getColor();
+        chosenColor1 = colorChooser.getColor();
         chosenColor2 = colorChooser2.getColor();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == confirm) {
+            ProgramHub.color1 = chosenColor1;
+            ProgramHub.color2 = chosenColor2;
+            this.dispose();
+        }
     }
 }

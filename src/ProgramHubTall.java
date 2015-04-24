@@ -209,7 +209,7 @@ public class ProgramHubTall extends JFrame implements ActionListener
         }
         if (event.getSource() == calcButton)
         {
-            WorkCalcGUI workCalc = new WorkCalcGUI();
+            WorkCalcGUI workCalc = new WorkCalcGUI(color1, color2, direction);
             workCalc.setTitle("Work Calculator");
             workCalc.setSize(260, 250);
             workCalc.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
