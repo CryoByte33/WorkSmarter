@@ -1,3 +1,10 @@
+/**
+ * A cohesive shell for WorkSmarter. Contains most of the main functionality
+ * as well as all thread handling and window logic.
+ *
+ * @author CryoByte33
+ */
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -11,33 +18,52 @@ import java.util.Scanner;
 
 public class ProgramHub extends JFrame implements ActionListener
 {
-    //Formatting variables
+    /**
+     * Directory in which preferences are stored.
+     */
+    static final String directory = System.getProperty("user.home") + "/AppData/Roaming/WorkSmarter/";
+    /**
+     * Name of preferences file.
+     */
+    static final String fileName = "WorkSmarter.txt";
+    /**First color in use for themes.*/
     static Color color1 = new Color(255, 255, 255);
+    /**Second color in use for themes.*/
     static Color color2 = new Color(117, 243, 250);
+    /**Direction the gradient travels.*/
     static int direction = GradientButton.TOP_TO_BOTTOM;
+    /**The layout of the main WorkSmarter GUI. 0 = standard, 1 = tall, 2 = wide*/
     static int windowSize = 0;
-    //Panels to be used.
+    /**JPanel used for all link buttons.*/
     JPanel linkPanel;
+    /**JPanel used for header button.*/
     JPanel header;
-    //Buttons for days!
+    /**Link buttons.*/
     GradientButton calcButton, salesforceButton, etimeButton, wikiCentralButton, opsmartButton, jiraButton, btbbButton, bbhelpButton, testLabButton, bandwidthButton, headerButton;
     GradientButton windowsCalcButton, puttyButton, winscpButton, remoteDesktopButton, outlookButton, notepadButton, optionsButton;
-    //Links for buttons.
+    /**Link for header button.*/
     String headerPath = "http://github.com/CryoByte33/WorkSmarter";
+    /**Link for SalesForce.*/
     String salesforcePath = "https://blackboard.my.salesforce.com/console";
+    /**Link for eTime.*/
     String etimePath = "http://rocjfsweb06/eet/applications/wtk/html/ess/logon.jsp";
+    /**Link for WikiCentral.*/
     String wikiCentralPath = "http://wikicentral.bbbb.net/login.action?logout=true";
+    /**Link for OpSmart.*/
     String opsmartPath = "https://opsmart.blackboard.com/tracksmart/login.php";
+    /**Link for JIRA.*/
     String jiraPath = "https://carbon.pd.local:8443/secure/Dashboard.jspa";
+    /**Link for Behind the Blackboard.*/
     String btbbPath = "https://blackboard.secure.force.com/login";
+    /**Link for Blackboard Help.*/
     String bbhelpPath = "http://help.blackboard.com/";
+    /**Link for Blackboard Support Test Lab.*/
     String testLabPath = "https://silicon.pd.local:8443/display/CSI/Test+Lab";
+    /**Link for Bandwidth Tracker.*/
     String bandwidthPath = "http://10.8.224.35/";
+    /**Initial layout of WorkSmarter. (Standard Size)*/
     GridLayout standard = new GridLayout(0, 3, 10, 10);
-    BorderLayout pageLayout = new BorderLayout();
-    GridLayout headerLayout = new GridLayout(0, 1);
-    String directory = System.getProperty("user.home") + "/AppData/Roaming/WorkSmarter/";
-    String pathToFile = "WorkSmarter.txt";
+    /**Opens separate thread for options dialog.*/
     public Thread optionsThread = new Thread()
     {
         public void run()
@@ -45,7 +71,15 @@ public class ProgramHub extends JFrame implements ActionListener
             launchOptions();
         }
     };
-    //Threads for each program that's bootable.
+    /**
+     * Layout for entire ProgramHub JFrame
+     */
+    BorderLayout pageLayout = new BorderLayout();
+    /**
+     * Layout used for header button. Necessary evil.
+     */
+    GridLayout headerLayout = new GridLayout(0, 1);
+    /**Opens separate thread for Windows Calculator.*/
     Thread calcThread = new Thread()
     {
         public void run()
@@ -53,6 +87,7 @@ public class ProgramHub extends JFrame implements ActionListener
             launchWinCalc();
         }
     };
+    /**Opens separate thread for PuTTY client.*/
     Thread puttyThread = new Thread()
     {
         public void run()
@@ -60,6 +95,7 @@ public class ProgramHub extends JFrame implements ActionListener
             launchPutty();
         }
     };
+    /**Opens separate thread for WinSCP FTP client.*/
     Thread winscpThread = new Thread()
     {
         public void run()
@@ -67,6 +103,7 @@ public class ProgramHub extends JFrame implements ActionListener
             launchWinscp();
         }
     };
+    /**Opens separate thread for Windows Remote Desktop client.*/
     Thread remoteThread = new Thread()
     {
         public void run()
@@ -74,6 +111,7 @@ public class ProgramHub extends JFrame implements ActionListener
             launchRemoteDesktop();
         }
     };
+    /**Opens separate thread for Microsoft Outlook.*/
     Thread outlookThread = new Thread()
     {
         public void run()
@@ -81,6 +119,7 @@ public class ProgramHub extends JFrame implements ActionListener
             launchOutlook();
         }
     };
+    /**Opens separate thread for Notepad++.*/
     Thread notepadThread = new Thread()
     {
         public void run()
@@ -89,9 +128,12 @@ public class ProgramHub extends JFrame implements ActionListener
         }
     };
 
-    //Main constructor
+    /**Constructor of ProgramHub() */
     public ProgramHub()
     {
+        /**Tries to load options from file
+         * @exception IOException Cannot load file.
+         */
         try
         {
             loadOptions();
@@ -101,6 +143,7 @@ public class ProgramHub extends JFrame implements ActionListener
             e.printStackTrace();
         }
 
+        //Initializes window to size loaded from file, else keeps at standard.
         if (windowSize == 0)
         {
             standard = new GridLayout(0, 3, 10, 10);
@@ -114,15 +157,18 @@ public class ProgramHub extends JFrame implements ActionListener
             standard = new GridLayout(0, 8, 10, 10);
         }
 
+        //Initializes the GUI for first construction.
         initializeGUI();
     }
 
-    //Initialize the program
+    /**Main method which calls window to be built */
     public static void main(String[] args)
     {
+        //Main window declaration.
         ProgramHub box = new ProgramHub();
         box.setTitle("WorkSmarter");
 
+        //Sets window size depending on preferences file, else standard.
         if (windowSize == 0)
         {
             box.setSize(450, 400);
@@ -140,13 +186,14 @@ public class ProgramHub extends JFrame implements ActionListener
         box.setVisible(true);
     }
 
+    /**Initializes the GUI from the ground up.*/
     public void initializeGUI()
     {
-        //Give panels layouts
+        //Gives panels the correct layout.
         linkPanel = new JPanel(standard);
         header = new JPanel(headerLayout);
 
-        //Fancy banner with error checking
+        //Banner as an ImageButton, but also Gradient Button. Tricky.
         BufferedImage buttonIcon = null;
         try
         {
@@ -213,7 +260,7 @@ public class ProgramHub extends JFrame implements ActionListener
         optionsButton = new GradientButton(color1, color2, direction, "Options");
         optionsButton.addActionListener(this);
 
-        //Add all the things to the panel
+        //Adds all elements to linkPanel.
         linkPanel.add(salesforceButton);
         linkPanel.add(etimeButton);
         linkPanel.add(wikiCentralButton);
@@ -231,18 +278,22 @@ public class ProgramHub extends JFrame implements ActionListener
         linkPanel.add(notepadButton);
         linkPanel.add(optionsButton);
 
-        //Formatting
+        //Formats WorkSmarter window.
         this.setLayout(pageLayout);
         this.add(header, BorderLayout.PAGE_START);
         this.add(linkPanel, BorderLayout.CENTER);
         this.add(calcButton, BorderLayout.PAGE_END);
     }
 
+    /**Updates GUI that has already been initialized.*/
     public void updateGUI()
     {
+        //Remove all links from linkPanel.
         linkPanel.removeAll();
+        //Remove linkPanel from main window.
         this.remove(linkPanel);
 
+        //Set the Gradient of all buttons to new color.
         headerButton.setGradient(color1, color2, direction);
         calcButton.setGradient(color1, color2, direction);
         salesforceButton.setGradient(color1, color2, direction);
@@ -262,6 +313,7 @@ public class ProgramHub extends JFrame implements ActionListener
         notepadButton.setGradient(color1, color2, direction);
         optionsButton.setGradient(color1, color2, direction);
 
+        //Sets the new window size and layout.
         if (windowSize == 0)
         {
             this.setSize(450, 400);
@@ -278,8 +330,10 @@ public class ProgramHub extends JFrame implements ActionListener
             standard = new GridLayout(0, 8, 10, 10);
         }
 
+        //Re-initialize linkPanel.
         linkPanel = new JPanel(standard);
 
+        //Add all links to linkPanel.
         linkPanel.add(salesforceButton);
         linkPanel.add(etimeButton);
         linkPanel.add(wikiCentralButton);
@@ -297,14 +351,16 @@ public class ProgramHub extends JFrame implements ActionListener
         linkPanel.add(notepadButton);
         linkPanel.add(optionsButton);
 
+        //Add linkPanel to main window for viewing.
         this.add(linkPanel, BorderLayout.CENTER);
     }
 
-    //Implementation of abstract methods/
+    /**Takes button press and turns into a result. (Launching a specified page or program)
+     * @param event A button being pushed.
+     */
     @Override
     public void actionPerformed(ActionEvent event)
     {
-        //Make link buttons do things
         if (event.getSource() == headerButton)
         {
             try
@@ -318,6 +374,7 @@ public class ProgramHub extends JFrame implements ActionListener
         }
         if (event.getSource() == calcButton)
         {
+            //Initialize an new Work Calculator
             WorkCalcGUI workCalc = new WorkCalcGUI(color1, color2, direction);
             workCalc.setTitle("Work Calculator");
             workCalc.setSize(260, 250);
@@ -491,7 +548,7 @@ public class ProgramHub extends JFrame implements ActionListener
         }
     }
 
-    //Everything following is launch and thread logic. To be improved.
+    /**Launch Windows Calculator*/
     public void launchWinCalc()
     {
         Process process = null;
@@ -541,6 +598,7 @@ public class ProgramHub extends JFrame implements ActionListener
         };
     }
 
+    /**Launch PuTTY*/
     public void launchPutty()
     {
         Process process = null;
@@ -590,6 +648,7 @@ public class ProgramHub extends JFrame implements ActionListener
         };
     }
 
+    /**Launch WinSCP*/
     public void launchWinscp()
     {
         Process process = null;
@@ -639,6 +698,7 @@ public class ProgramHub extends JFrame implements ActionListener
         };
     }
 
+    /**Launch Windows Remote Desktop*/
     public void launchRemoteDesktop()
     {
         Process process = null;
@@ -688,6 +748,7 @@ public class ProgramHub extends JFrame implements ActionListener
         };
     }
 
+    /**Launch Microsoft Outlook*/
     public void launchOutlook()
     {
         Process process = null;
@@ -737,6 +798,7 @@ public class ProgramHub extends JFrame implements ActionListener
         };
     }
 
+    /**Launch Notepad++*/
     public void launchNotepad()
     {
         Process process = null;
@@ -786,6 +848,7 @@ public class ProgramHub extends JFrame implements ActionListener
         };
     }
 
+    /**Launch Options Dialog*/
     public void launchOptions()
     {
         OptionsButton options = new OptionsButton();
@@ -832,27 +895,37 @@ public class ProgramHub extends JFrame implements ActionListener
         };
     }
 
+    /**Save preferences file to specified directory. Space delimited, and in integer format for both privacy and efficiency.
+     * @throws FileNotFoundException File not found (Although it will be, since it's created if it's missing.
+     */
     public void saveOptions() throws FileNotFoundException
     {
         File fileDirectory = new File(directory);
 
+        //Creates directory if it doesn't exist.
         if (fileDirectory.exists() == false)
         {
             fileDirectory.mkdir();
         }
 
+        //Saves file in specified format.
         String content = color1.getRed() + " " + color1.getGreen() + " " + color1.getBlue() + " " + color2.getRed() + " " + color2.getGreen() + " " + color2.getBlue() + " " + windowSize;
-        PrintWriter out = new PrintWriter(directory + pathToFile);
+        PrintWriter out = new PrintWriter(directory + fileName);
         out.println(content);
         out.close();
     }
 
+    /**Load preferences if file exists. Reads into an integer array and stuffs into variables.
+     * @throws IOException File doesn't exist. Skips over read action.
+     */
     public void loadOptions() throws IOException
     {
-        Scanner scanner = new Scanner(new File(directory + pathToFile));
+        //Creates scanner at directory + filename.
+        Scanner scanner = new Scanner(new File(directory + fileName));
         int[] values = new int[7];
         int i = 0;
 
+        //While the file has an integer remaining to read, it reads it.
         while (scanner.hasNextInt())
         {
             values[i++] = scanner.nextInt();
