@@ -288,10 +288,10 @@ public class ProgramHub extends JFrame implements ActionListener
     /**Updates GUI that has already been initialized.*/
     public void updateGUI()
     {
-        //Remove all links from linkPanel.
-        linkPanel.removeAll();
         //Remove linkPanel from main window.
         this.remove(linkPanel);
+        //Remove all links from linkPanel.
+        linkPanel.removeAll();
 
         //Set the Gradient of all buttons to new color.
         headerButton.setGradient(color1, color2, direction);
@@ -330,9 +330,6 @@ public class ProgramHub extends JFrame implements ActionListener
             standard = new GridLayout(0, 8, 10, 10);
         }
 
-        //Re-initialize linkPanel.
-        linkPanel = new JPanel(standard);
-
         //Add all links to linkPanel.
         linkPanel.add(salesforceButton);
         linkPanel.add(etimeButton);
@@ -353,6 +350,9 @@ public class ProgramHub extends JFrame implements ActionListener
 
         //Add linkPanel to main window for viewing.
         this.add(linkPanel, BorderLayout.CENTER);
+
+        //Re-initialize linkPanel.
+        linkPanel.updateUI();
     }
 
     /**Takes button press and turns into a result. (Launching a specified page or program)
@@ -862,8 +862,6 @@ public class ProgramHub extends JFrame implements ActionListener
             @Override
             public void windowClosed(WindowEvent e)
             {
-                updateGUI();
-
                 try
                 {
                     saveOptions();
@@ -872,6 +870,7 @@ public class ProgramHub extends JFrame implements ActionListener
                 {
                     e1.printStackTrace();
                 }
+                updateGUI();
             }
         });
 
