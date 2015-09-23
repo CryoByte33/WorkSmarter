@@ -8,8 +8,6 @@ import java.awt.event.MouseListener;
  * two color. It extends JButton. So we can use all the feature of JButton. It has a method named
  * setGradient(Color color1, Color color2) by which we can set the colors of the gradient background.
  * And also setGradient(Color color1, Color color2, int align) which allows us to set the alignment of these colors.
- *
- * @author Mashuk
  */
 public class GradientButton extends JButton implements MouseListener
 {
